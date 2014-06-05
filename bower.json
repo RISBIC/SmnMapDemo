@@ -1,0 +1,25 @@
+{
+  "name": "snap-map",
+  "version": "0.0.1",
+  "authors": [
+    "Derek Mortimer <derek.mortimer@me.com>"
+  ],
+  "description": "SMN Demo Map (Angular/Leaflet)",
+  "main": "map.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "lib",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-bootstrap": "~0.11.0",
+    "angular-moment": "~0.7.1",
+    "angular-snap": "~1.5.0",
+    "Leaflet.awesome-markers": "~2.0.2"
+  }
+}
