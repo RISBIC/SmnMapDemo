@@ -41,13 +41,12 @@ angular.module('maps').controller('MapsController', ['$scope', 'Outstations', 'S
         touchToDrag: false
     }
 
-    // Initialise empty icons collection
+    // Initialise empty collections
     $scope.icons = {};
-
-    // Initialise empty markers collection
     $scope.markers = {};
+    $scope.outstations = {};
 
-    // Initialise 0 responses
+    // Track when requests are in progress
     $scope.responseCount = 0;
     $scope.inFlight = false;
 
@@ -59,23 +58,26 @@ angular.module('maps').controller('MapsController', ['$scope', 'Outstations', 'S
         'white','gray','lightgray','black'
     ];
 
+    // Plot all outstations
+    $scope.resetMarkers = function () {
+        angular.forEach($scope.outstations, function (outstation, id) {
+            $scope.markers[id] = {
+                icon: { type: 'awesomeMarker', prefix: 'fa', icon: 'circle', markerColor: 'blue' },
+                message: outstation.name + ' (' + outstation.description + ')',
+                lng: outstation.location.coordinates[0],
+                lat: outstation.location.coordinates[1]
+            };
+        })
+    }
+
     // Fetch all outstations
     $scope.loadOutstations = function () {
         Outstations.query(function (outstations) {
-            $scope.outstations = {};
-            $scope.outstationCount = outstations.length;
-
-            // Plot each outstation on the map
             angular.forEach(outstations, function (outstation, index) {
                 $scope.outstations[outstation.outstationid] = outstation;
-
-                $scope.markers[outstation.outstationid] = {
-                    icon: { type: 'awesomeMarker', prefix: 'fa', icon: 'circle', markerColor: 'blue' },
-                    message: outstation.name + ' (' + outstation.description + ')',
-                    lng: outstation.location.coordinates[0],
-                    lat: outstation.location.coordinates[1]
-                };
             });
+
+            $scope.resetMarkers();
         });
     };
 
@@ -83,11 +85,9 @@ angular.module('maps').controller('MapsController', ['$scope', 'Outstations', 'S
     $scope.queryLiveness = function () {
         $scope.responseCount = 0;
         $scope.inFlight = true;
+        $scope.resetMarkers();
 
-        angular.forEach($scope.outstations, function (outstation, index) {
-            $scope.markers[outstation.outstationid].icon.markerColor = 'blue';
-            $scope.markers[outstation.outstationid].icon.icon = 'circle';
-
+        angular.forEach($scope.outstations, function (outstation) {
             Outstations.get({outstationId: outstation.outstationid}, function (result) {
                 $scope.responseCount++;
                 $scope.inFlight = false;
@@ -116,11 +116,9 @@ angular.module('maps').controller('MapsController', ['$scope', 'Outstations', 'S
     $scope.querySpeed = function () {
         $scope.responseCount = 0;
         $scope.inFlight = true;
+        $scope.resetMarkers();
 
-        angular.forEach($scope.outstations, function (outstation, index) {
-            $scope.markers[outstation.outstationid].icon.markerColor = 'blue';
-            $scope.markers[outstation.outstationid].icon.icon = 'circle';
-
+        angular.forEach($scope.outstations, function (outstation) {
             var query = {
                 outstationId: outstation.outstationid,
                 reportType: 'speed',
@@ -157,19 +155,20 @@ angular.module('maps').controller('MapsController', ['$scope', 'Outstations', 'S
     // Query flow information
     $scope.queryFlow = function (period) {
         $scope.inFlight = true;
+        $scope.resetMarkers();
 
         Flows.query({reportPeriod: period}, function (flows) {
             $scope.inFlight = false;
 
             // Gray them all up and turn green the ones with info
-            _.each($scope.markers, function (marker) {
+            angular.forEach($scope.markers, function (marker) {
                 marker.icon.markerColor = 'gray';
                 marker.icon.icon = 'circle-o'
             });
 
             var grouped = _.groupBy(flows, 'outstationid');
 
-            _.each(grouped, function (group, oid) {
+            angular.forEach(grouped, function (group) {
                 var max = _.max(group, 'volume');
 
                 $scope.markers[max.outstationid].icon.markerColor = 'green';
