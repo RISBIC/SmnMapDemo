@@ -20,3 +20,33 @@ snap-drawer {
 snap-drawer .row {
 	margin-top: 5px;
 }
+
+.fa-arrow-n:before {
+  content: "\f062";
+}
+.fa-arrow-ne:before {
+  content: "\f062";
+}
+.fa-arrow-e:before {
+  content: "\f061";
+}
+.fa-arrow-se:before {
+  content: "\f061";
+}
+.fa-arrow-s:before {
+  content: "\f063";
+}
+.fa-arrow-sw:before {
+  content: "\f063";
+}
+.fa-arrow-w:before {
+  content: "\f060";
+}
+.fa-arrow-nw:before {
+  content: "\f060";
+}
+.fa-arrow-ne, .fa-arrow-se, .fa-arrow-sw, .fa-arrow-nw {
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+}

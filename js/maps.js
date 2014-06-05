@@ -170,18 +170,19 @@ angular.module('maps').controller('MapsController', ['$scope', 'Outstations', 'S
 
             angular.forEach(grouped, function (group) {
                 var max = _.max(group, 'volume');
+                var marker = $scope.markers[max.outstationid];
 
-                $scope.markers[max.outstationid].icon.markerColor = 'green';
-                $scope.markers[max.outstationid].message = $scope.markers[max.outstationid].message + ' (FLOW: ' + max.orientation + ')';
+                marker.icon.markerColor = 'green';
+                marker.message = marker.message + ' (FLOW: ' + max.orientation + ')';
 
-                if (max.orientation === 'N') { $scope.markers[max.outstationid].icon.icon = 'arrow-up'; }
-                else if (max.orientation === 'S') { $scope.markers[max.outstationid].icon.icon = 'arrow-down'; }
-                else if (max.orientation === 'E') { $scope.markers[max.outstationid].icon.icon = 'arrow-right'; }
-                else if (max.orientation === 'W') { $scope.markers[max.outstationid].icon.icon = 'arrow-left'; }
-                else if (max.orientation === 'NE') { $scope.markers[max.outstationid].icon.icon = 'arrow-right'; }
-                else if (max.orientation === 'SE') { $scope.markers[max.outstationid].icon.icon = 'arrow-right'; }
-                else if (max.orientation === 'NW') { $scope.markers[max.outstationid].icon.icon = 'arrow-left'; }
-                else if (max.orientation === 'SW') { $scope.markers[max.outstationid].icon.icon = 'arrow-left'; }
+                if (max.orientation === 'N') { marker.icon.icon = 'arrow-n'; }
+                else if (max.orientation === 'NE') { marker.icon.icon = 'arrow-ne'; }
+                else if (max.orientation === 'E') { marker.icon.icon = 'arrow-e'; }
+                else if (max.orientation === 'SE') { marker.icon.icon = 'arrow-se'; }
+                else if (max.orientation === 'S') { marker.icon.icon = 'arrow-s'; }
+                else if (max.orientation === 'SW') { marker.icon.icon = 'arrow-sw'; }
+                else if (max.orientation === 'W') { marker.icon.icon = 'arrow-w'; }
+                else if (max.orientation === 'NW') { marker.icon.icon = 'arrow-nw'; }
             });
         });
     }
